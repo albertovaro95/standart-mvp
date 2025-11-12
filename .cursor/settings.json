@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)",
+      "Bash(npm:*)",
+      "Bash(pip:*)",
+      "Bash(python:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Write",
+      "Edit",
+      "Bash(touch:*)",
+      "Bash(pip install:*)",
+      "Bash(uvicorn:*)",
+      "Bash(git worktree:*)",
+      "Bash(pytest:*)",
+      "mcp_github_create_pull_request",
+      "mcp_github_create_branch",
+      "mcp_github_push_files",
+      "mcp_github_create_or_update_file"
+    ],
+    "deny": []
+  },
+  "enabledMcpjsonServers": ["github"],
+  "hooks": {}
+}
