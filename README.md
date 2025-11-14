@@ -4,17 +4,40 @@ Crear proyecto en modo MVP para validar ideas de forma ágil y sencilla
 
 ## 🚀 Inicio Rápido
 
-### Opción 1: Usando Makefile (Recomendado)
+### Opción 1: Setup completo e iniciar (Recomendado)
 
 ```bash
-# Instalar todas las dependencias
+# Setup completo e iniciar servidores (todo en uno)
+make quick-start
+```
+
+### Opción 2: Paso a paso
+
+```bash
+# 1. Instalar todas las dependencias
+make setup
+
+# 2. Iniciar backend y frontend en paralelo
+make start
+```
+
+### Opción 3: Comandos individuales
+
+```bash
+# Instalar dependencias
 make install
 
-# Levantar backend y frontend en paralelo
+# Iniciar solo backend
+make backend
+
+# Iniciar solo frontend
+make frontend
+
+# Iniciar ambos en paralelo
 make dev
 ```
 
-### Opción 2: Manual
+### Opción 4: Manual (sin Makefile)
 
 #### Backend
 
