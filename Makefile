@@ -1,4 +1,4 @@
-.PHONY: help install-backend install-frontend backend frontend dev clean test
+.PHONY: help install-backend install-frontend backend frontend dev setup start quick-start clean test
 
 # Variables
 PYTHON := python3
@@ -40,6 +40,22 @@ install-frontend: ## Instalar dependencias del frontend
 
 install: install-backend install-frontend ## Instalar todas las dependencias
 
+setup: install ## Setup completo: instala dependencias y muestra información
+	@echo ""
+	@echo "$(GREEN)═══════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)  ✓ Setup completado exitosamente$(NC)"
+	@echo "$(GREEN)═══════════════════════════════════════════════════════════$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Próximos pasos:$(NC)"
+	@echo "  1. Ejecuta $(GREEN)make start$(NC) para iniciar backend y frontend"
+	@echo "  2. O ejecuta $(GREEN)make dev$(NC) para iniciar en paralelo"
+	@echo ""
+	@echo "$(YELLOW)URLs cuando estén corriendo:$(NC)"
+	@echo "  • Frontend: $(GREEN)http://localhost:5173$(NC)"
+	@echo "  • Backend API: $(GREEN)http://localhost:8000$(NC)"
+	@echo "  • API Docs: $(GREEN)http://localhost:8000/docs$(NC)"
+	@echo ""
+
 backend: ## Levantar el servidor backend
 	@echo "$(GREEN)Iniciando servidor backend...$(NC)"
 	@if [ ! -d "$(VENV)" ]; then \
@@ -56,17 +72,34 @@ frontend: ## Levantar el servidor frontend
 	fi
 	@cd $(FRONTEND_DIR) && $(NPM) run dev
 
-dev: ## Levantar backend y frontend en paralelo (requiere 'make' y terminales separadas)
-	@echo "$(GREEN)Iniciando backend y frontend...$(NC)"
-	@echo "$(YELLOW)Backend: http://localhost:8000$(NC)"
-	@echo "$(YELLOW)Frontend: http://localhost:5173$(NC)"
-	@echo "$(YELLOW)Documentación API: http://localhost:8000/docs$(NC)"
+start: ## Iniciar backend y frontend (verifica dependencias primero)
+	@echo "$(GREEN)Verificando dependencias...$(NC)"
+	@if [ ! -d "$(VENV)" ]; then \
+		echo "$(YELLOW)Entorno virtual no encontrado. Ejecutando setup...$(NC)"; \
+		$(MAKE) install-backend; \
+	fi
+	@if [ ! -d "$(FRONTEND_DIR)/node_modules" ]; then \
+		echo "$(YELLOW)node_modules no encontrado. Ejecutando setup...$(NC)"; \
+		$(MAKE) install-frontend; \
+	fi
+	@echo ""
+	@echo "$(GREEN)═══════════════════════════════════════════════════════════$(NC)"
+	@echo "$(GREEN)  🎄 Tienda Navideña - Iniciando servidores$(NC)"
+	@echo "$(GREEN)═══════════════════════════════════════════════════════════$(NC)"
+	@echo ""
+	@echo "$(YELLOW)URLs:$(NC)"
+	@echo "  • Frontend: $(GREEN)http://localhost:5173$(NC)"
+	@echo "  • Backend API: $(GREEN)http://localhost:8000$(NC)"
+	@echo "  • API Docs: $(GREEN)http://localhost:8000/docs$(NC)"
 	@echo ""
 	@echo "$(GREEN)Presiona Ctrl+C para detener ambos servidores$(NC)"
+	@echo ""
 	@trap 'kill 0' EXIT; \
 	cd $(BACKEND_DIR) && $(VENV_PYTHON) main.py & \
 	cd $(FRONTEND_DIR) && $(NPM) run dev & \
 	wait
+
+dev: start ## Alias para start (compatibilidad)
 
 clean: ## Limpiar archivos generados
 	@echo "$(YELLOW)Limpiando archivos...$(NC)"
@@ -116,5 +149,7 @@ status: ## Mostrar estado de los servidores
 	@echo ""
 	@echo "$(YELLOW)Frontend:$(NC)"
 	@curl -s http://localhost:5173 > /dev/null 2>&1 && echo "  $(GREEN)✓ Activo en http://localhost:5173$(NC)" || echo "  $(RED)✗ No está corriendo$(NC)"
+
+quick-start: setup start ## Setup completo e iniciar servidores (todo en uno)
 
 .DEFAULT_GOAL := help
